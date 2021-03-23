@@ -61,16 +61,6 @@ class LoadScene extends Phaser.Scene {
         this.load.tilemapTiledJSON("map", "assets/mapa_calvia/mapa.json");
 
 
-        this.load.spritesheet('player', 'assets/sant_jordi.png', {
-            frameWidth: 128,
-            frameHeight: 128
-        });
-        this.load.image("lanza", "assets/lanza.png");
-
-        this.load.spritesheet('princesa', 'assets/princesa.png', {
-            frameWidth: 128,
-            frameHeight: 128
-        });
         this.load.spritesheet('drac', 'assets/drac.png', {
             frameWidth: 128,
             frameHeight: 128
@@ -105,77 +95,9 @@ class LoadScene extends Phaser.Scene {
 
     create() {
         console.log("start Bootscene");
-        this.createAnimations();
+        
         this.scene.start('Title')
     }
 
-    createAnimations(){
-        this.anims.create({
-            key: 'princesa_walk',
-            frames: this.anims.generateFrameNumbers('princesa', {
-                start: 0,
-                end: 1
-            }),
-            frameRate: 6,
-            repeat: -1
-        });
-        this.anims.create({
-            key: 'eat',
-            frames: this.anims.generateFrameNumbers('oveja', {
-                start: 0,
-                end: 1
-            }),
-            frameRate: 0.5,
-            repeat: -1
-        });
-        this.anims.create({
-            key: 'fly',
-            frames: this.anims.generateFrameNumbers('drac', {
-                start: 0,
-                end: 1
-            }),
-            frameRate: 8,
-            repeat: -1
-        });
-        this.anims.create({
-            key: 'crema',
-            frames: this.anims.generateFrameNumbers('foc', {
-                start: 0,
-                end: 2
-            }),
-            frameRate: 4,
-            repeat: 1,
-            yoyo: true
-
-        })
-        this.anims.create({
-            key: 'love',
-            frames: this.anims.generateFrameNumbers('corazon', {
-                start: 0,
-                end: 4
-            }),
-            frameRate: 2,
-            repeat: 1
-        });
-
-        this.anims.create({
-            key: 'walk',
-            frames: this.anims.generateFrameNumbers('player', {
-                start: 0,
-                end: 1
-            }),
-            frameRate: 8,
-            repeat: -1
-        });
-
-        this.anims.create({
-            key: 'player_burn',
-            frames: this.anims.generateFrameNumbers('player', {
-                start: 2,
-                end: 9
-            }),
-            frameRate: 4,
-            repeat: 0
-        });
-    }
+    
 }

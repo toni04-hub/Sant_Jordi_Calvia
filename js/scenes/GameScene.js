@@ -7,7 +7,12 @@ class GameScene extends Phaser.Scene {
     init(data) {
         console.log(data)
         this.isPrinces = data.isPrinces;
-
+        this.STJORDI = 'player';
+        this.PRINCESA = 'princesa';
+        if(this.isPrinces){
+            this.STJORDI = 'princesa';
+            this.PRINCESA = 'player';
+        }
         this.velocity = 160;
         this.canLove = true
         this.canBurn = false;
@@ -19,12 +24,22 @@ class GameScene extends Phaser.Scene {
     }
     preload() {
         this.load.scenePlugin('AnimatedTiles', 'https://raw.githubusercontent.com/nkholski/phaser-animated-tiles/master/dist/AnimatedTiles.js', 'animatedTiles', 'animatedTiles');
-
+        this.load.spritesheet(this.STJORDI, 'assets/sant_jordi.png', {
+            frameWidth: 128,
+            frameHeight: 128
+        });
+        
+        this.load.spritesheet(this.PRINCESA, 'assets/princesa.png', {
+            frameWidth: 128,
+            frameHeight: 128
+        });
+        
+        
     }
 
     create() {
         this.createAudio();
-
+        this.createAnimations();
         //Effecto de camara al iniciar la escena
         this.cameras.main.fadeFrom(2000, Phaser.Math.Between(50, 255), Phaser.Math.Between(50, 255), Phaser.Math.Between(50, 255));
 
@@ -712,6 +727,75 @@ class GameScene extends Phaser.Scene {
             console.log(this.sys.scale.scaleMode = 5)
         }
 
+    }
+    createAnimations(){
+        this.anims.create({
+            key: 'princesa_walk',
+            frames: this.anims.generateFrameNumbers('princesa', {
+                start: 0,
+                end: 1
+            }),
+            frameRate: 6,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'eat',
+            frames: this.anims.generateFrameNumbers('oveja', {
+                start: 0,
+                end: 1
+            }),
+            frameRate: 0.5,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'fly',
+            frames: this.anims.generateFrameNumbers('drac', {
+                start: 0,
+                end: 1
+            }),
+            frameRate: 8,
+            repeat: -1
+        });
+        this.anims.create({
+            key: 'crema',
+            frames: this.anims.generateFrameNumbers('foc', {
+                start: 0,
+                end: 2
+            }),
+            frameRate: 4,
+            repeat: 1,
+            yoyo: true
+
+        })
+        this.anims.create({
+            key: 'love',
+            frames: this.anims.generateFrameNumbers('corazon', {
+                start: 0,
+                end: 4
+            }),
+            frameRate: 2,
+            repeat: 1
+        });
+
+        this.anims.create({
+            key: 'walk',
+            frames: this.anims.generateFrameNumbers('player', {
+                start: 0,
+                end: 1
+            }),
+            frameRate: 8,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'player_burn',
+            frames: this.anims.generateFrameNumbers('player', {
+                start: 2,
+                end: 9
+            }),
+            frameRate: 4,
+            repeat: 0
+        });
     }
 
 }
