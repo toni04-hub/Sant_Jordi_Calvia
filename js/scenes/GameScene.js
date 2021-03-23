@@ -64,12 +64,9 @@ class GameScene extends Phaser.Scene {
 
         this.addColliders();
 
-        if (!this.isPrinces) {
+     
             this.addZonesColliders(this.player);
-        } else {
-            this.addZonesColliders(this.princesa);
-        }
-
+       
 
         this.time.addEvent({
             delay: 4000,
@@ -95,12 +92,6 @@ class GameScene extends Phaser.Scene {
                 delay: 100, // ms
                 callback: () => {
                     this.isBurning = false;
-                    //volvemos a andar si estamos en modo princesa
-                    if (this.isPrinces) {
-                        this.player.anims.play('walk');
-                        this.player.flipX = true;
-                        this.player.setVelocityX(-60);
-                    }
                     //ponemos el puntos a 0
                     // this.coinScore = 0; // increment the score 
                     // this.textPunts.setText(`Punts: ${this.coinScore}x`); // set the text to show the current score
@@ -114,10 +105,10 @@ class GameScene extends Phaser.Scene {
         });
 
         this.corazon.on('animationcomplete', () => {
-            if (!this.isPrinces) {
-                this.princesa.body.moves = true;
-                this.princesa.anims.play('princesa_walk');
-            }
+            
+            this.princesa.body.moves = true;
+            this.princesa.anims.play('princesa_walk');
+            
             this.corazon.setFrame(0);
             this.canLove = true;
 
@@ -125,11 +116,9 @@ class GameScene extends Phaser.Scene {
 
         this.events.on('resume', (scene, data) => {
             console.log('resume event')
-            if (!this.isPrinces) {
+          
                 this.player.y = this.player.y + 40;
-            } else {
-                this.princesa.y = this.princesa.y + 40;
-            }
+        
         });
 
 
@@ -338,7 +327,7 @@ class GameScene extends Phaser.Scene {
     }
 
     createPrincesa() {
-        if (!this.isPrinces) {
+        
             this.princesa = this.physics.add.sprite(1300, 680, 'princesa', 0);
             this.princesa.body.setSize(54, 54, false);
             this.princesa.body.setOffset(50, 54);
@@ -348,13 +337,7 @@ class GameScene extends Phaser.Scene {
             this.princesa.anims.play('princesa_walk');
             this.princesa.flipX = true;
             this.princesa.setVelocityX(-60);
-        } else {
-            const spawnPlayer = this.map.findObject("links", obj => obj.name === "player");
-            this.princesa = this.physics.add.sprite(spawnPlayer.x, spawnPlayer.y, 'princesa', 0);
-            this.princesa.body.setSize(46, 54, false);
-            this.princesa.body.setOffset(40, 56);
-            this.princesa.setCollideWorldBounds(true);
-        }
+        
     }
 
     createCorazon() {
@@ -363,23 +346,13 @@ class GameScene extends Phaser.Scene {
     }
 
     createPlayer() {
-        if (!this.isPrinces) {
+        
             const spawnPlayer = this.map.findObject("links", obj => obj.name === "player");
             this.player = this.physics.add.sprite(spawnPlayer.x, spawnPlayer.y, 'player', 0);
             this.player.body.setSize(50, 54, false);
             this.player.body.setOffset(50, 56);
             this.player.setCollideWorldBounds(true);
-        } else {
-            this.player = this.physics.add.sprite(1300, 680, 'princesa', 0);
-            this.player.body.setSize(54, 54, false);
-            this.player.body.setOffset(50, 54);
-            this.player.setCollideWorldBounds(true);
-            this.player.setImmovable(true);
-            this.player.body.allowGravity = false;
-            this.player.anims.play('walk');
-            this.player.flipX = true;
-            this.player.setVelocityX(-60);
-        }
+        
     }
 
     createCamera() {
@@ -387,11 +360,9 @@ class GameScene extends Phaser.Scene {
         this.camera.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels);
         this.physics.world.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels);
         this.camera.roundPixels = true;
-        if (!this.isPrinces) {
+        
             this.camera.startFollow(this.player);
-        } else {
-            this.camera.startFollow(this.princesa);
-        }
+
     }
 
 
@@ -480,20 +451,16 @@ class GameScene extends Phaser.Scene {
         this.physics.add.collider(this.player, this.princesa, () => {
             if (this.canLove) {
                 this.corazon.anims.play('love');
-                if (!this.isPrinces) {
+    
                     this.princesa.anims.stop('princesa_walk');
                     this.princesa.body.moves = false;
-                } else {
-                    // this.player.anims.stop('walk');
-                    //this.player.body.moves = false;
-                }
 
                 this.canLove = false;
             }
 
         });
 
-        if (!this.isPrinces) {
+        
             this.physics.add.overlap(this.player, this.stars, (player, star) => {
                 this.starPickupAudio.play();
                 star.destroy();
@@ -509,29 +476,14 @@ class GameScene extends Phaser.Scene {
                 this.textPunts.setText(`Punts: ${this.coinScore}x`); // set the text to show the current score
             }, null, this);
 
-        } else {
-            this.physics.add.overlap(this.princesa, this.stars, (player, star) => {
-                this.starPickupAudio.play();
-                star.destroy();
-                this.visitats++; // increment the score
-                this.textVisitats.setText(`Visitats: ${this.visitats}/12`); // set the text to show the current score
-
-            }, null, this);
-
-            this.physics.add.overlap(this.princesa, this.coins, (player, coin) => {
-                this.coinPickupAudio.play();
-                coin.destroy();
-                this.coinScore++; // increment the score
-                this.textPunts.setText(`Punts: ${this.coinScore}x`); // set the text to show the current score
-            }, null, this);
-        }
+        
 
         this.physics.add.overlap(this.player, this.foc, () => {
             if (this.canBurn && !this.isBurning) {
                 console.log('burn');
-                if (!this.isPrinces) {
+              
                     this.burnAudio.play();
-                }
+                
                 this.player.body.moves = false;
                 this.player.anims.stop('walk');
                 this.player.anims.play('player_burn');
@@ -669,7 +621,7 @@ class GameScene extends Phaser.Scene {
         this.corazon.x = this.princesa.x + 20;
         this.corazon.y = this.princesa.y - 50;
         // move princes
-        if (!this.isPrinces) {
+   
 
             // reverse movement if reached the edges
 
@@ -685,50 +637,7 @@ class GameScene extends Phaser.Scene {
                 this.princesa.flipX = true;
             }
 
-        } else {
-            this.princesa.body.setVelocity(0);
-
-            if (this.cursors.left.isDown) {
-                this.princesa.body.setVelocityX(-this.velocity);
-            } else if (this.cursors.right.isDown) {
-                this.princesa.body.setVelocityX(this.velocity);
-            }
-
-            if (this.cursors.up.isDown) {
-                this.princesa.body.setVelocityY(-this.velocity);
-            } else if (this.cursors.down.isDown) {
-                this.princesa.body.setVelocityY(this.velocity);
-            }
-
-            if (this.joyStick.left) {
-                this.princesa.body.setVelocityX(-this.velocity);
-            } else if (this.joyStick.right) {
-                this.princesa.body.setVelocityX(this.velocity);
-            }
-            if (this.joyStick.up) {
-                this.princesa.body.setVelocityY(-this.velocity);
-            } else if (this.joyStick.down) {
-                this.princesa.body.setVelocityY(this.velocity);
-            }
-            // Normalize and scale the velocity so that player can't move faster along a diagonal
-            this.princesa.body.velocity.normalize().scale(this.velocity);
-
-            // Update the animation last and give left/right animations precedence over up/down animations
-            if (this.cursors.left.isDown || this.joyStick.left) {
-                this.princesa.flipX = true;
-                this.princesa.anims.play("princesa_walk", true);
-            } else if (this.cursors.right.isDown || this.joyStick.right) {
-                this.princesa.flipX = false;
-                this.princesa.anims.play("princesa_walk", true);
-            } else if (this.cursors.up.isDown || this.joyStick.up) {
-                this.princesa.anims.play("princesa_walk", true);
-            } else if (this.cursors.down.isDown || this.joyStick.down) {
-                this.princesa.anims.play("princesa_walk", true);
-            } else {
-                this.princesa.anims.stop();
-                this.princesa.setFrame(0);
-            }
-        }
+        
     }
     update() {
         this.updatePrincesa();
@@ -744,8 +653,7 @@ class GameScene extends Phaser.Scene {
             this.drac.flipX = false;
         }
 
-        if (!this.isPrinces) {
-
+      
             //move player
             if (!this.isBurning) {
 
@@ -799,22 +707,7 @@ class GameScene extends Phaser.Scene {
                     this.player.setFrame(0);
                 }
             }
-        } else {
-
-            // reverse movement if reached the edges
-
-            if (this.player.x > 1300) {
-                this.player.setVelocityX(-60);
-            }
-            if (this.player.x < 900) {
-                this.player.setVelocityX(60);
-            }
-            if (this.player.body.velocity.x > 0) {
-                this.player.flipX = false;
-            } else {
-                this.player.flipX = true;
-            }
-        }
+      
         if (this.spaceBar.isDown) {
             console.log(this.sys.scale.scaleMode = 5)
         }
