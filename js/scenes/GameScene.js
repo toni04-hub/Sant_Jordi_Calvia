@@ -126,6 +126,7 @@ class GameScene extends Phaser.Scene {
             
             this.corazon.setFrame(0);
             this.canLove = true;
+            this.princesaRandomMove()
 
         })
 
@@ -156,7 +157,7 @@ class GameScene extends Phaser.Scene {
         this.tileset_arbol = this.map.addTilesetImage("arbol", "_arbol")
         this.tileset_rosa = this.map.addTilesetImage("rosa", "_rosa")
         this.tileset_carpas = this.map.addTilesetImage("carpa", "_carpa")
-
+        this.tileset_roulottes = this.map.addTilesetImage("roulotte", "_roulotte")
         //To use multiple tilesets we need to make an array and pass it to the creteLayer Method
         this.allLayers = [
             this.tileset_grass,
@@ -168,6 +169,7 @@ class GameScene extends Phaser.Scene {
             this.tileset_arbol,
             this.tileset_rosa,
             this.tileset_carpas,
+            this.tileset_roulottes
         ];
 
         // Parameters: layer name (or index) from Tiled, tileset, x, y
@@ -326,7 +328,7 @@ class GameScene extends Phaser.Scene {
 
         //attack timer
         this.time.addEvent({
-            delay: 4000, // ms
+            delay: 8000, // ms
             callback: () => {
                 var vel = Phaser.Math.Between(80, 140);
                 this.physics.moveToObject(this.drac, this.player, vel);
@@ -335,6 +337,7 @@ class GameScene extends Phaser.Scene {
             callbackScope: this,
             loop: true
         });
+
     }
 
     createFoc() {
@@ -352,6 +355,21 @@ class GameScene extends Phaser.Scene {
             this.princesa.anims.play('princesa_walk');
             this.princesa.flipX = true;
             this.princesa.setVelocityX(-60);
+            //this.princesa.body.setVelocityY(60);
+            this.princesa.body.bounce.set(0.8);
+
+                    //random movement
+        this.time.addEvent({
+            delay: 6000, // ms
+            callback: () => {
+                this.princesaRandomMove()
+            },
+            //args: [],
+            callbackScope: this,
+            loop: true
+        });
+                
+
         
     }
 
@@ -435,7 +453,15 @@ class GameScene extends Phaser.Scene {
         this.zone10.setOrigin(0);
         this.physics.world.enable(this.zone10, 1); // (0) DYNAMIC (1) STATIC
 
+        const link11 = this.map.findObject("links", obj => obj.name === "link11");
+        this.zone11 = this.add.zone(link11.x, link11.y, link11.width, 1);
+        this.zone11.setOrigin(0);
+        this.physics.world.enable(this.zone11, 1); // (0) DYNAMIC (1) STATIC
 
+        const link12 = this.map.findObject("links", obj => obj.name === "link12");
+        this.zone12 = this.add.zone(link12.x, link12.y, link12.width, 1);
+        this.zone12.setOrigin(0);
+        this.physics.world.enable(this.zone12, 1); // (0) DYNAMIC (1) STATIC
 
     }
 
@@ -447,15 +473,37 @@ class GameScene extends Phaser.Scene {
         this.physics.add.collider(this.player, this.esglesiaLayer);
         this.physics.add.collider(this.player, this.creuLayer);
 
-        this.physics.add.collider(this.princesa, this.seaLayer);
-        this.physics.add.collider(this.princesa, this.treesLayer);
-        this.physics.add.collider(this.princesa, this.carpasTopLayer);
-        this.physics.add.collider(this.princesa, this.galatzoLayer);
-        this.physics.add.collider(this.princesa, this.esglesiaLayer);
-        this.physics.add.collider(this.princesa, this.creuLayer);
+        this.physics.add.collider(this.princesa, this.seaLayer, ()=>{
+            this.princesaRandomMove()
+            console.log("seaaaa")
+            
+        });
+        this.physics.add.collider(this.princesa, this.treesLayer, ()=>{
+            this.princesaRandomMove()
+            
+        });
+        this.physics.add.collider(this.princesa, this.carpasTopLayer, ()=>{
+            this.princesaRandomMove()
+            
+        });
+        this.physics.add.collider(this.princesa, this.galatzoLayer, ()=>{
+           
+            this.princesaRandomMove()
+        });
+        this.physics.add.collider(this.princesa, this.esglesiaLayer, ()=>{
+           
+            this.princesaRandomMove()
+        });
+        this.physics.add.collider(this.princesa, this.creuLayer, ()=>{
+            this.princesaRandomMove()
+            
+        });
 
         this.physics.add.collider(this.ovejas, this.player);
-        this.physics.add.collider(this.ovejas, this.princesa);
+        this.physics.add.collider(this.ovejas, this.princesa,()=>{
+            //this.princesaRandomMove()
+            
+        });
         this.physics.add.collider(this.ovejas, this.seaLayer);
         this.physics.add.collider(this.ovejas, this.treesLayer);
         this.physics.add.collider(this.ovejas, this.carpasTopLayer);
@@ -517,7 +565,7 @@ class GameScene extends Phaser.Scene {
             this.scene.pause();
             this.joyStick.visible = false;
             this.scene.launch('Ui', {
-                url: "12345"
+                url: links.LINK1
             })
             this.scene.bringToTop('Ui');
 
@@ -530,7 +578,7 @@ class GameScene extends Phaser.Scene {
             this.scene.pause();
             this.joyStick.visible = false;
             this.scene.launch('Ui', {
-                url: "12345"
+                url: links.LINK2
             })
             this.scene.bringToTop('Ui');
 
@@ -542,7 +590,7 @@ class GameScene extends Phaser.Scene {
             this.scene.pause();
             this.joyStick.visible = false;
             this.scene.launch('Ui', {
-                url: "12345"
+                url: links.LINK3
             })
             this.scene.bringToTop('Ui');
 
@@ -554,7 +602,7 @@ class GameScene extends Phaser.Scene {
             this.scene.pause();
             this.joyStick.visible = false;
             this.scene.launch('Ui', {
-                url: "12345"
+                url: links.LINK4
             })
             this.scene.bringToTop('Ui');
 
@@ -566,7 +614,7 @@ class GameScene extends Phaser.Scene {
             this.scene.pause();
             this.joyStick.visible = false;
             this.scene.launch('Ui', {
-                url: "12345"
+                url: links.LINK5
             })
             this.scene.bringToTop('Ui');
 
@@ -578,7 +626,7 @@ class GameScene extends Phaser.Scene {
             this.scene.pause();
             this.joyStick.visible = false;
             this.scene.launch('Ui', {
-                url: "12345"
+               url: links.LINK6
             })
             this.scene.bringToTop('Ui');
 
@@ -590,7 +638,7 @@ class GameScene extends Phaser.Scene {
             this.scene.pause();
             this.joyStick.visible = false;
             this.scene.launch('Ui', {
-                url: "12345"
+                url: links.LINK7
             })
             this.scene.bringToTop('Ui');
 
@@ -602,7 +650,7 @@ class GameScene extends Phaser.Scene {
             this.scene.pause();
             this.joyStick.visible = false;
             this.scene.launch('Ui', {
-                url: "12345"
+                url: links.LINK8
             })
             this.scene.bringToTop('Ui');
 
@@ -614,7 +662,7 @@ class GameScene extends Phaser.Scene {
             this.scene.pause();
             this.joyStick.visible = false;
             this.scene.launch('Ui', {
-                url: "12345"
+                url: links.LINK9
             })
             this.scene.bringToTop('Ui');
 
@@ -626,11 +674,52 @@ class GameScene extends Phaser.Scene {
             this.scene.pause();
             this.joyStick.visible = false;
             this.scene.launch('Ui', {
-                url: "12345"
+                url: links.LINK10
             })
             this.scene.bringToTop('Ui');
 
         });
+
+        this.physics.add.overlap(char, this.zone11, () => {
+            console.log('open link 11');
+
+            this.scene.pause();
+            this.joyStick.visible = false;
+            this.scene.launch('Ui', {
+                url: links.LINK11
+            })
+            this.scene.bringToTop('Ui');
+
+        });
+
+        this.physics.add.overlap(char, this.zone12, () => {
+            console.log('open link 12');
+
+            this.scene.pause();
+            this.joyStick.visible = false;
+            this.scene.launch('Ui', {
+                url: links.LINK12
+            })
+            this.scene.bringToTop('Ui');
+
+        });
+    }
+    princesaRandomMove(){
+        var selMove = Phaser.Math.Between(0, 3);
+        console.log(selMove);
+       if(selMove == 0){
+            this.princesa.body.setVelocityX(60);
+            this.princesa.body.setVelocityY(0);
+        }else if(selMove == 1){
+            this.princesa.body.setVelocityX(0);
+            this.princesa.body.setVelocityY(60);
+        }else if(selMove == 2){
+            this.princesa.body.setVelocityX(-60);
+            this.princesa.body.setVelocityY(0);
+        }else if(selMove == 3){
+            this.princesa.body.setVelocityX(0);
+            this.princesa.body.setVelocityY(-60);
+        }
     }
     updatePrincesa() {
         this.corazon.x = this.princesa.x + 20;
@@ -640,12 +729,12 @@ class GameScene extends Phaser.Scene {
 
             // reverse movement if reached the edges
 
-            if (this.princesa.x > 1300) {
+            /*if (this.princesa.x > 1300) {
                 this.princesa.setVelocityX(-60);
             }
             if (this.princesa.x < 900) {
                 this.princesa.setVelocityX(60);
-            }
+            }*/
             if (this.princesa.body.velocity.x > 0) {
                 this.princesa.flipX = false;
             } else {

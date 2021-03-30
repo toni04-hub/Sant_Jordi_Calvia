@@ -51,7 +51,7 @@ class LoadScene extends Phaser.Scene {
         this.load.image("_arbol", "assets/mapa_calvia/arbol.png");
         this.load.image("_rosa", "assets/mapa_calvia/rosa.png");
         this.load.image("_carpa", "assets/mapa_calvia/carpa.png");
-
+        this.load.image("_roulotte", "assets/mapa_calvia/roulotte.png");
 
         //this.load.image("_carpa_top", "assets/mapa_calvia/carpa_top.png");
         //this.load.image("_carpa_bottom", "assets/mapa_calvia/carpa_bottom.png");
